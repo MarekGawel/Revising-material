@@ -1,40 +1,22 @@
 from datetime import date
 
 
-def replacingInFile( mainFile, secondFile, progressFile, what, to, ):
+def replacingInFile( mainFile, secondFile, what, to):
     file = open(mainFile, "r")
-    tempFile = open(secondFile, "w")
-    #############################
-    noob = open(progressFile, 'r')
-    whichLine = int(noob.readline())
-    noob.close()
-    #############################
-    word = ""
-    line = ""
-    x = 0
-    for line in range(whichLine - 1):
-        line = file.readline().split()
-        tempFile.write(str(line))
+    tempFile = open(secondFile, "r+")
 
-
-
-    # while word != what:
-    #     char = file.readline(1)
-    #
-    #     if char == ' ':
-    #         line = line + word + ' '
-    #         word = ''
-    #
-    #     elif char == '\n':
-    #         line = line + word
-    #         tempFile.write(line)
-    #         line = ''
-    #         word = ''
-    #
-    #     else:
-    #         word += char
-    #         print(word)
-    #         print(line)
+    char = ""
+    while char != what:
+        tempFile.write(char)
+        char = file.readline(1)
+    tempFile.write(to)
+    tempFile.write(file.read())
+    ############################
+    file.close()
+    final = open(mainFile, "w")
+    tempFile.close()
+    t = open(secondFile, 'r')
+    final.write(t.read())
 
 
 
@@ -89,6 +71,10 @@ class Subject:
         which = open("progress", 'w')
         which.write(str(x))
         which.close()
+        end = input("Are you done with your work for today? [y / n]")
+        while end != y:
+            end = input("So study hard!")
+
 
 
     def after(self, fileNameTopic):
@@ -97,10 +83,10 @@ class Subject:
         while rate > 5:
             rate = input("Wrong rate! You should choose number between 0 and 5")
 
-        replacingInFile(fileNameTopic, "temp", "false", "true")
-        print("end of func after 1")
+        replacingInFile(fileNameTopic, "temp", "f", "t")
+
         replacingInFile(fileNameTopic, "temp", 0, rate)
-        print("end of func after 2")
+
 
 
     def howManyDays(self, deadline):
@@ -109,21 +95,8 @@ class Subject:
         print(delta.days)
 
 
-    # what to do after picking?
-    # 1. change boolean to true
-    # .. find a way to replace character (false -> true)
-    # 2. rate
-    # .. as above
 
 
 mat = Subject("list", "progress", date(2018, 9, 4), sum(1 for line in open("list")))
-#mat.forToday(mat.fileNameTopic, mat.all_topics, mat.fileNameLast)
-#mat.after(mat.fileNameTopic)
-
-# t= open("temp", "w")
-# co = "lol"
-# t.write(co)
-
-replacingInFile("list", "temp", "progress", "false", "true")
-
-
+mat.forToday(mat.fileNameTopic, mat.all_topics, mat.fileNameLast)
+mat.after(mat.fileNameTopic)
