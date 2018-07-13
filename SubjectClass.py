@@ -1,9 +1,9 @@
 from datetime import date
 
 
-def replacingInFile( mainFile, secondFile, what, to):
+def replacingInFile( mainFile, what, to):
     file = open(mainFile, "r")
-    tempFile = open(secondFile, "r+")
+    tempFile = open("temp", "r+")
 
     char = ""
     while char != what:
@@ -15,15 +15,8 @@ def replacingInFile( mainFile, secondFile, what, to):
     file.close()
     final = open(mainFile, "w")
     tempFile.close()
-    t = open(secondFile, 'r')
+    t = open("temp", 'r')
     final.write(t.read())
-
-
-
-
-
-
-
 
 
 class Subject:
@@ -46,7 +39,7 @@ class Subject:
             x += 1
             line = file.readline().split()
 
-            if line[2] == "false":
+            if line[2] == "f":
 
                 if x >= 3:
                     print(preprevious[0] + ". " + preprevious[3])
@@ -74,6 +67,8 @@ class Subject:
         end = input("Are you done with your work for today? [y / n]")
         while end != y:
             end = input("So study hard!")
+        prog = open(fileNameLast, 'w')
+        prog.write(x)
 
 
 
@@ -83,9 +78,9 @@ class Subject:
         while rate > 5:
             rate = input("Wrong rate! You should choose number between 0 and 5")
 
-        replacingInFile(fileNameTopic, "temp", "f", "t")
+        replacingInFile(fileNameTopic,"f", "t")
 
-        replacingInFile(fileNameTopic, "temp", 0, rate)
+        replacingInFile(fileNameTopic, 0, rate)
 
 
 
@@ -94,9 +89,9 @@ class Subject:
         delta = deadline - currentDate
         print(delta.days)
 
+    def theLeast
 
 
-
-mat = Subject("list", "progress", date(2018, 9, 4), sum(1 for line in open("list")))
+mat = Subject("list", date(2018, 9, 4), sum(1 for line in open("list")))
 mat.forToday(mat.fileNameTopic, mat.all_topics, mat.fileNameLast)
 mat.after(mat.fileNameTopic)
