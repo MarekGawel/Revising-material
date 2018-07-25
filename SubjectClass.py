@@ -1,14 +1,18 @@
 from datetime import date
-import  sys
-from PyQt5 import QtCore, QtGui
-from pygui import Ui_MainWindow
+from datetime import datetime
+import sys
+import time
 
 
+def ArrToStr(arr, i):
+    str = ''
+    while arr[i] != arr[-1]:
+        str += arr[i] + ' '
+        i += 1
+    str += arr[i] + ' '
+    return str
 
-
-
-
-
+#######################################################################################################################
 class Subject:
 
     def __init__(self, fileNameTopic, deadline, all_topics):
@@ -36,7 +40,8 @@ class Subject:
 
         t.close()
         final.close()
-    def forToday(self, fileNameTopic, all_topics, fileNameLast):
+
+    def forToday(self, fileNameTopic, all_topics):
         preprevious = []
         previous = []
         file = open(fileNameTopic, "r+")
@@ -50,18 +55,17 @@ class Subject:
             if line[2] == "f":
 
                 if x >= 3:
-                    print(preprevious[0] + ". " + preprevious[3])
-                    print(previous[0] + ". " + previous[3])
-                    print(line[0] + ". " + line[3])
+                    print("lb1", preprevious[0] + ". " + ArrToStr(preprevious, 3))
+                    print("lb2", previous[0] + ". " + ArrToStr(previous, 3))
+                    print("lb3", line[0] + ". " + ArrToStr(line, 3))
 
-                elif x==2:
-                    print(previous[0] + ". " + previous[3])
-                    print(line[0] + ". " + line[3])
+                elif x == 2:
+                    print("lb1", previous[0] + ". " + ArrToStr(previous, 3))
+                    print("lb2", line[0] + ". " + ArrToStr(line, 3))
                 else:
-                    print(line[0] + ". " + line[3])
+                    print("lb1", line[0] + ". " + ArrToStr(line, 3))
                     previous = file.readline().split()
-                    print(previous[0] + ". " + previous[3])
-
+                    print("lb1", previous[0] + ". " + ArrToStr(previous, 3))
 
                 break
 
@@ -69,12 +73,10 @@ class Subject:
             previous = line
 
         file.close()
+
         end = input("Are you done with your work for today? [y / n]")
         while end != "y":
             end = input("So study hard!")
-
-
-
 
     def after(self, fileNameTopic):
         rate = int(input("How do you feel about the last topic on scale 1-5?"))
@@ -82,16 +84,14 @@ class Subject:
         while rate > 5:
             rate = input("Wrong rate! You should choose number between 1 and 5")
 
-        replacingInFile(fileNameTopic,"f", "t")
+        Subject.replacingInFile(mat, fileNameTopic, "f", "t")
 
-        replacingInFile(fileNameTopic, 0, rate)
-
-
+        Subject.replacingInFile(mat, fileNameTopic, 0, rate)
 
     def howManyDays(self, deadline):
         currentDate = date.today()
         delta = deadline - currentDate
-        print(delta.days)
+        return str(delta.days)
 
     def theLeastRated(self, fileNameTopic, all_topics):
         f = open(fileNameTopic, 'r')
@@ -148,14 +148,64 @@ class Subject:
         mean = 0
         for line in range(all_topics):
             line = f.readline().split()
-            mean += line[1]
+            mean += int(line[1])
         mean = float(mean) / all_topics
-        print(mean)
+        return str(mean)
+#######################################################################################################################
+
+def filegenerating(name):
+    f = open(name, "w")
+    x = 1
+    topic = input()
+
+    while topic != 'q':
+        f.write(str(x) + " 0 f" + topic)
+        x +=1
+        topic = input()
+    f.close()
 
 
-class MyWin:
 
-    def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+
+
+def addNew():
+    name = "newFile"
+    fnam = input("Do you have file with your topics, or do you want to create it? [1 / 2]")
+    if fnam == '1':
+        name = input("File name: ")
+
+    else:
+        filegenerating(name)
+
+
+    dline = input("Now enter the date of your exam, by writing the year, month and the day, each one followed by space")
+    dline.split()
+    myDate = date(int(dline[0]), int(dline[1]), int(dline[2]))
+    new  = Subject(name, myDate, sum(1 for line in open(name)))
+
+
+
+#######################################################################################################################
+
+
+mat = Subject("list", date(2018, 9, 4), sum(1 for line in open("list")))
+
+print("Welcome today! How can I help you?" + "\t \t \t \t \t \t \t", end="\n", flush=True),
+print("1. Show me material for today." + "\t \t \t \t \t \t \t \t" + "Days to your exam:" + "\t" + mat.howManyDays(
+    mat.deadline), end="\n", flush=False),
+print("2. Show me my worst rated topics." + "\t \t \t \t \t \t \t" + "Your average:" + "\t" + mat.meanAverage(
+    mat.fileNameTopic, mat.all_topics), end="", flush=False),
+print("\nPres q to quit.")
+
+userIn = input()
+
+if userIn == 'q':
+    sys.exit()
+elif userIn == '1':
+    mat.forToday(mat.fileNameTopic, mat.all_topics)
+    mat.after(mat.fileNameTopic)
+
+elif userIn == "2":
+    mat.theLeastRated(mat.fileNameTopic, mat.all_topics)
+else:
+    userIn = input('Wrong input!')
