@@ -1,8 +1,9 @@
-from datetime import date
-from datetime import datetime
+#!/usr/bin/python3
+
+from datetime import date, datetime
 import sys
 import time
-
+from PyQt5 import QtWidgets
 
 def ArrToStr(arr, i):
     str = ''
@@ -12,17 +13,18 @@ def ArrToStr(arr, i):
     str += arr[i] + ' '
     return str
 
+
 #######################################################################################################################
 class Subject:
 
-    def __init__(self, fileNameTopic, deadline, all_topics):
+    def __init__(self, filelNameTopic, deadline, all_topics):
 
-        self.fileNameTopic = fileNameTopic
+        self.filelNameTopic = self.filelNameTopic
         self.deadline = deadline
         self.all_topics = all_topics
 
-    def replacingInFile(self, mainFile, what, to):
-        file = open(mainFile, "r")
+    def replacingInFile(self, what, to):
+        file = open(self.filelNameTopic, "r")
         tempFile = open("temp", "r+")
 
         char = ""
@@ -33,7 +35,7 @@ class Subject:
         tempFile.write(file.read())
         ############################
         file.close()
-        final = open(mainFile, "w")
+        final = open(self.filelNameTopic, "w")
         tempFile.close()
         t = open("temp", 'r')
         final.write(t.read())
@@ -41,31 +43,31 @@ class Subject:
         t.close()
         final.close()
 
-    def forToday(self, fileNameTopic, all_topics):
+    def forToday(self):
         preprevious = []
         previous = []
-        file = open(fileNameTopic, "r+")
+        file = open(self.filelNameTopic, "r+")
 
         x = 0
         print("Now it's time for you to do topics: ")
-        for line in range(all_topics):
+        for line in range(self.all_topics):
             x += 1
             line = file.readline().split()
 
             if line[2] == "f":
 
                 if x >= 3:
-                    print("lb1", preprevious[0] + ". " + ArrToStr(preprevious, 3))
-                    print("lb2", previous[0] + ". " + ArrToStr(previous, 3))
-                    print("lb3", line[0] + ". " + ArrToStr(line, 3))
+                    print(preprevious[0] + ". " + ArrToStr(preprevious, 3))
+                    print(previous[0] + ". " + ArrToStr(previous, 3))
+                    print(line[0] + ". " + ArrToStr(line, 3))
 
                 elif x == 2:
-                    print("lb1", previous[0] + ". " + ArrToStr(previous, 3))
-                    print("lb2", line[0] + ". " + ArrToStr(line, 3))
+                    print(previous[0] + ". " + ArrToStr(previous, 3))
+                    print(line[0] + ". " + ArrToStr(line, 3))
                 else:
-                    print("lb1", line[0] + ". " + ArrToStr(line, 3))
+                    print(line[0] + ". " + ArrToStr(line, 3))
                     previous = file.readline().split()
-                    print("lb1", previous[0] + ". " + ArrToStr(previous, 3))
+                    print(previous[0] + ". " + ArrToStr(previous, 3))
 
                 break
 
@@ -74,31 +76,31 @@ class Subject:
 
         file.close()
 
-        end = input("Are you done with your work for today? [y / n]")
+        end = input("Are you done with your work for today? [y / n]\n")
         while end != "y":
-            end = input("So study hard!")
+            end = input("So study hard! \n How about now?")
 
-    def after(self, fileNameTopic):
+    def after(self):
         rate = int(input("How do you feel about the last topic on scale 1-5?"))
 
         while rate > 5:
-            rate = input("Wrong rate! You should choose number between 1 and 5")
+            rate = str(input("Wrong rate! You should choose number between 1 and 5"))
 
-        Subject.replacingInFile(mat, fileNameTopic, "f", "t")
+        Subject.replacingInFile(self,"f", "t")
 
-        Subject.replacingInFile(mat, fileNameTopic, 0, rate)
+        Subject.replacingInFile(self, '0', str(rate))
 
     def howManyDays(self, deadline):
         currentDate = date.today()
         delta = deadline - currentDate
         return str(delta.days)
 
-    def theLeastRated(self, fileNameTopic, all_topics):
-        f = open(fileNameTopic, 'r')
+    def theLeastRated(self):
+        f = open(self.filelNameTopic, 'r')
         bad = [5, 5, 5, '']
         worse = [5, 5, 5, '']
         theWorst = [5, 5, 5, '']
-        for line in range(all_topics):
+        for line in range(self.all_topics):
             line = f.readline().split()
 
             if line[1] < theWorst[1]:
@@ -133,24 +135,44 @@ class Subject:
                 while in1 > 5:
                     in1 = input("Wrong rate! You should choose number between 1 and 5")
 
-                Subject.replacingInFile(fileNameTopic, theWorst[1], in1)
+                Subject.replacingInFile(self.filelNameTopic, theWorst[1], in1)
                 in1 = int(input("Rate the second topic, that you've done today (scale 1-5): \n"))
                 while in1 > 5:
                     in1 = input("Wrong rate! You should choose number between 1 and 5")
-                Subject.replacingInFile(fileNameTopic, worse[1], in1)
+                Subject.replacingInFile(self.filelNameTopic, worse[1], in1)
                 in1 = int(input("Rate the third topic, that you've done today (scale 1-5): \n"))
                 while in1 > 5:
                     in1 = input("Wrong rate! You should choose number between 1 and 5")
-                Subject.replacingInFile(fileNameTopic, bad[1], in1)
+                Subject.replacingInFile(self.filelNameTopic, bad[1], in1)
 
-    def meanAverage(self, fileNameTopic, all_topics):
-        f = open(fileNameTopic, 'r')
+    def meanAverage(self):
+        f = open(self.filelNameTopic, 'r')
         mean = 0
-        for line in range(all_topics):
+        for line in range(self.all_topics):
             line = f.readline().split()
             mean += int(line[1])
-        mean = float(mean) / all_topics
+        mean = float(mean) / self.all_topics
         return str(mean)
+
+    def letChoose(self):
+        f = open(self.filelNameTopic, "r")
+        print(f)
+        first = (input("Now choose 3 topics by number:"))
+        second = (input())
+        third = (input("And the last one:"))
+        f.close()
+        file =  open(self.filelNameTopic, "r")
+        a = file.readline(int(first))
+        a.split()
+        print(a[0] + a[3])
+        a = file.readline(int(second))
+        a.split()
+        print(a[0] + a[3])
+        a = file.readline(int(third))
+        a.split()
+        print(a[0] + a[3])
+
+
 #######################################################################################################################
 
 def filegenerating(name):
@@ -160,12 +182,9 @@ def filegenerating(name):
 
     while topic != 'q':
         f.write(str(x) + " 0 f" + topic)
-        x +=1
+        x += 1
         topic = input()
     f.close()
-
-
-
 
 
 def addNew():
@@ -177,35 +196,39 @@ def addNew():
     else:
         filegenerating(name)
 
-
     dline = input("Now enter the date of your exam, by writing the year, month and the day, each one followed by space")
     dline.split()
     myDate = date(int(dline[0]), int(dline[1]), int(dline[2]))
-    new  = Subject(name, myDate, sum(1 for line in open(name)))
-
+    new = Subject(name, myDate, sum(1 for line in open(name)))
 
 
 #######################################################################################################################
 
-
 mat = Subject("list", date(2018, 9, 4), sum(1 for line in open("list")))
 
-print("Welcome today! How can I help you?" + "\t \t \t \t \t \t \t", end="\n", flush=True),
+print(sys.version)
+print("Welcome today! How can I help you?" + "\t \t \t \t \t \t \t")
 print("1. Show me material for today." + "\t \t \t \t \t \t \t \t" + "Days to your exam:" + "\t" + mat.howManyDays(
-    mat.deadline), end="\n", flush=False),
+   mat.deadline))
 print("2. Show me my worst rated topics." + "\t \t \t \t \t \t \t" + "Your average:" + "\t" + mat.meanAverage(
-    mat.fileNameTopic, mat.all_topics), end="", flush=False),
-print("\nPres q to quit.")
+   ))
+print("\n Press q to quit.")
 
 userIn = input()
 
-if userIn == 'q':
-    sys.exit()
+if userIn == "q":
+   sys.exit()
 elif userIn == '1':
-    mat.forToday(mat.fileNameTopic, mat.all_topics)
-    mat.after(mat.fileNameTopic)
+   mat.forToday()
+   mat.after()
+   if userIn == "q":
+       sys.exit()
 
-elif userIn == "2":
-    mat.theLeastRated(mat.fileNameTopic, mat.all_topics)
+elif userIn == '2':
+   mat.theLeastRated()
+   if userIn == "q":
+       sys.exit()
 else:
-    userIn = input('Wrong input!')
+   userIn = input('Wrong input!')
+print("Thank you")
+sys.exit()
