@@ -3,7 +3,6 @@
 from datetime import date, datetime
 import sys
 import time
-from PyQt5 import QtWidgets
 
 def ArrToStr(arr, i):
     str = ''
@@ -19,7 +18,7 @@ class Subject:
 
     def __init__(self, filelNameTopic, deadline, all_topics):
 
-        self.filelNameTopic = self.filelNameTopic
+        self.filelNameTopic = filelNameTopic
         self.deadline = deadline
         self.all_topics = all_topics
 
